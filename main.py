@@ -8,6 +8,17 @@ from pygame.math import Vector2
 from utils import body_direction, head_direction, tail_direction
 
 
+# for pyinstaller
+def resource_path(relative_path):
+    try:
+        # pyinstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 class Fruit:
     def __init__(self) -> None:
         self.pos = Vector2(
@@ -15,7 +26,7 @@ class Fruit:
             y=random.randint(0, cell_number - 1),
         )
         self.color = (255, 0, 0)
-        self.image = pygame.image.load(os.path.abspath('./graphics/apple.png')).convert_alpha()
+        self.image = pygame.image.load(resource_path('graphics/apple.png')).convert_alpha()
         self.image = pygame.transform.scale(self.image, (cell_size, cell_size))
 
     def draw(self, use_image=False):
@@ -66,27 +77,27 @@ class Snake:
         self.reset()
 
         self.images = {
-            'head_up': pygame.image.load(os.path.abspath('./graphics/head_up.png')).convert_alpha(),
-            'head_down': pygame.image.load(os.path.abspath('./graphics/head_down.png')).convert_alpha(),
-            'head_left': pygame.image.load(os.path.abspath('./graphics/head_left.png')).convert_alpha(),
-            'head_right': pygame.image.load(os.path.abspath('./graphics/head_right.png')).convert_alpha(),
+            'head_up': pygame.image.load(resource_path('graphics/head_up.png')).convert_alpha(),
+            'head_down': pygame.image.load(resource_path('graphics/head_down.png')).convert_alpha(),
+            'head_left': pygame.image.load(resource_path('graphics/head_left.png')).convert_alpha(),
+            'head_right': pygame.image.load(resource_path('graphics/head_right.png')).convert_alpha(),
 
-            'tail_up': pygame.image.load(os.path.abspath('./graphics/tail_up.png')).convert_alpha(),
-            'tail_down': pygame.image.load(os.path.abspath('./graphics/tail_down.png')).convert_alpha(),
-            'tail_left': pygame.image.load(os.path.abspath('./graphics/tail_left.png')).convert_alpha(),
-            'tail_right': pygame.image.load(os.path.abspath('./graphics/tail_right.png')).convert_alpha(),
+            'tail_up': pygame.image.load(resource_path('graphics/tail_up.png')).convert_alpha(),
+            'tail_down': pygame.image.load(resource_path('graphics/tail_down.png')).convert_alpha(),
+            'tail_left': pygame.image.load(resource_path('graphics/tail_left.png')).convert_alpha(),
+            'tail_right': pygame.image.load(resource_path('graphics/tail_right.png')).convert_alpha(),
 
-            'body_tl': pygame.image.load(os.path.abspath('./graphics/body_tl.png')).convert_alpha(),
-            'body_tr': pygame.image.load(os.path.abspath('./graphics/body_tr.png')).convert_alpha(),
-            'body_bl': pygame.image.load(os.path.abspath('./graphics/body_bl.png')).convert_alpha(),
-            'body_br': pygame.image.load(os.path.abspath('./graphics/body_br.png')).convert_alpha(),
-            'body_horizontal': pygame.image.load(os.path.abspath('./graphics/body_horizontal.png')).convert_alpha(),
-            'body_vertical': pygame.image.load(os.path.abspath('./graphics/body_vertical.png')).convert_alpha(),
+            'body_tl': pygame.image.load(resource_path('graphics/body_tl.png')).convert_alpha(),
+            'body_tr': pygame.image.load(resource_path('graphics/body_tr.png')).convert_alpha(),
+            'body_bl': pygame.image.load(resource_path('graphics/body_bl.png')).convert_alpha(),
+            'body_br': pygame.image.load(resource_path('graphics/body_br.png')).convert_alpha(),
+            'body_horizontal': pygame.image.load(resource_path('graphics/body_horizontal.png')).convert_alpha(),
+            'body_vertical': pygame.image.load(resource_path('graphics/body_vertical.png')).convert_alpha(),
         }
         for key, image in self.images.items():
             self.images[key] = pygame.transform.scale(image, (cell_size, cell_size))
 
-        self.eat_sound = pygame.mixer.Sound(os.path.abspath('./sound/crunch.wav'))
+        self.eat_sound = pygame.mixer.Sound(resource_path('sound/crunch.wav'))
 
     def reset(self):
         mid_pos = int(cell_number / 2)
@@ -185,16 +196,20 @@ def game_over():
 
 if __name__ == '__main__':
     pygame.init()
+
     cell_size = 40
     cell_number = 16
 
-    game_font = pygame.font.Font(os.path.abspath('./font/PoetsenOne-Regular.ttf'), 25)
+    game_font = pygame.font.Font(resource_path('font/PoetsenOne-Regular.ttf'), 25)
 
     screen = pygame.display.set_mode((cell_number * cell_size, cell_number * cell_size))
     clock = pygame.time.Clock()
 
     SNAKE_UPDATE = pygame.USEREVENT
     pygame.time.set_timer(SNAKE_UPDATE, 200)
+
+    pygame.display.set_icon(pygame.image.load(resource_path('graphics/head_up.png')).convert_alpha())
+    pygame.display.set_caption('Another Snake Game')
 
     fruit = Fruit()
     snake = Snake()

@@ -1,5 +1,21 @@
-My attempt at creating a game using the pygame library
+Build steps:
 
-Check out the tutorial by Clear Code: [Learning pygame by creating Snake (Python Tutorial)](https://www.youtube.com/watch?v=QFvqStqPCRU)
+1. Create items for build process
 
-Here are some screenshots:
+```
+pyinstaller --onefile main.py --collect-data graphics --collect-data font --collect-data sound --noconsole
+```
+
+\*Note: For Windows users, if the build process encounters errors, go to your Windows Defender settings and allow the main.exe file created by PyInstaller. Windows Defender might prevent the build because it thinks your project is a virus.
+
+2. Add assets in .spec file
+
+```
+datas = [('graphics/*','graphics'),('font/*','font'),('sound/*','sound')]
+```
+
+3. Create executable file
+
+```
+pyinstaller main.spec
+```
